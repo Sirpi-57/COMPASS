@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMPASS - Comprehensive Observational Multi-Platform Analytical Support System</title>
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Modern Reset & Design System */
+        :root {
+            --primary: #1e4d8c;
+            --primary-light: #2a6abe;
+            --secondary: #ff6b35;
+            --accent: #29c7ac;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-700: #495057;
+            --success: #32936f;
+            --warning: #ffb703;
+            --danger: #e63946;
+            --font-primary: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --box-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --box-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --box-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 16px;
+            --transition-std: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: var(--font-primary);
+            background-color: var(--gray-100);
+            color: var(--dark);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+            overflow-y: auto; /* Allow page scrolling */
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Header & Brand */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 1.5rem 0;
+            position: relative;
+            border-bottom: 4px solid var(--secondary);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.2);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            box-shadow: var(--box-shadow-sm);
+        }
+
+        .brand-details {
+            flex-grow: 1;
+        }
+
+        .brand-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.2rem;
+        }
+
+        .brand-tagline {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+            max-width: 700px;
+        }
+
+        /* Main Content Area */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 0;
+            position: relative;
+            overflow: visible; /* Allow content to be visible */
+        }
+
+        /* Background Elements */
+        .bg-gradient {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: linear-gradient(45deg, rgba(232, 242, 255, 0.7), rgba(235, 248, 255, 0.3));
+            z-index: -1;
+        }
+
+        .bg-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(30, 77, 140, 0.03) 1%, transparent 8%),
+                radial-gradient(circle at 75% 75%, rgba(30, 77, 140, 0.03) 1%, transparent 8%);
+            background-size: 60px 60px;
+            z-index: -1;
+        }
+
+        /* Modern Presentation Container */
+        .presentation-container {
+            width: 95%;
+            max-width: 1200px;
+            min-height: 680px; /* Increased height */
+            height: auto; /* Auto height to fit content */
+            position: relative;
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--box-shadow-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 2rem;
+            transition: all 0.5s ease;
+        }
+
+        /* Fullscreen mode */
+        .presentation-container.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            max-width: none;
+            max-height: none;
+            border-radius: 0;
+            z-index: 1000;
+            margin: 0;
+            overflow-y: auto; /* Allow scrolling in fullscreen */
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background-color: var(--gray-200);
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 5;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--secondary);
+            width: 20%; /* Will be updated by JS */
+            transition: width 0.4s ease;
+        }
+
+        /* Slide Styling */
+        .slides-wrapper {
+            width: 100%;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            min-height: 540px; /* Ensure minimum height for slides */
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 3rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(50px);
+            transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s 0.5s;
+            overflow: auto; /* Add scrolling if content overflows */
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            z-index: 1;
+        }
+
+        .slide-header {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .slide-title {
+            color: var(--primary);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .slide-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background-color: var(--secondary);
+            border-radius: 2px;
+        }
+
+        .slide-subtitle {
+            color: var(--gray-700);
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-top: 1rem;
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+
+        /* Custom scrollbar */
+        .slide-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .slide-content::-webkit-scrollbar-track {
+            background: var(--gray-200);
+            border-radius: 10px;
+        }
+
+        .slide-content::-webkit-scrollbar-thumb {
+            background: var(--gray-400);
+            border-radius: 10px;
+        }
+
+        .slide-content::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-500);
+        }
+
+        /* Content Layouts */
+        .content-centered {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .grid-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        /* List Styling */
+        .custom-list {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .custom-list li {
+            position: relative;
+            padding-left: 1.8rem;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        .custom-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.6rem;
+            width: 8px;
+            height: 8px;
+            background-color: var(--secondary);
+            border-radius: 50%;
+        }
+
+        .custom-list.check-list li::before {
+            content: '✓';
+            background-color: transparent;
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1rem;
+            top: 0.1rem;
+            left: 0.2rem;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow-sm);
+            height: 100%;
+            border-top: 3px solid var(--primary);
+            transition: var(--transition-std);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow-md);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-icon {
+            background-color: var(--primary-light);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        /* Process Flow */
+        .process-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin: 2rem 0;
+        }
+
+        .process-step {
+            background-color: rgba(30, 77, 140, 0.08);
+            border: 1px solid rgba(30, 77, 140, 0.15);
+            border-radius: 20px;
+            padding: 0.7rem 1.5rem;
+            font-weight: 500;
+            color: var(--primary);
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .process-step .icon {
+            background-color: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .process-arrow {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin: 0 0.2rem;
+        }
+
+        /* Use Case Section */
+        .use-cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .use-case-item {
+            background-color: rgba(30, 77, 140, 0.05);
+            border-radius: var(--border-radius-sm);
+            padding: 0.8rem 1.2rem;
+            text-align: center;
+            transition: var(--transition-std);
+            border-left: 3px solid var(--primary-light);
+        }
+
+        .use-case-item:hover {
+            background-color: rgba(30, 77, 140, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Final Slide CTA */
+        .cta-container {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cta-heading {
+            font-size: 2.4rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-subheading {
+            font-size: 1.2rem;
+            color: var(--gray-700);
+            margin-bottom: 2.5rem;
+        }
+
+        /* Navigation & Action Button Container */
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            background-color: var(--gray-100);
+            border-top: 1px solid var(--gray-200);
+            padding-bottom: 1rem;
+        }
+
+        /* Navigation Controls */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 1.5rem 3rem;
+        }
+
+        .slide-indicators {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .slide-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--gray-300);
+            cursor: pointer;
+            transition: var(--transition-std);
+        }
+
+        .slide-indicator.active {
+            background-color: var(--primary);
+            transform: scale(1.2);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-button {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--transition-std);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-color: var(--gray-400);
+            color: var(--gray-400);
+        }
+
+        /* Fullscreen button */
+        .fullscreen-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: rgba(0, 0, 0, 0.1);
+            color: var(--primary);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: var(--transition-std);
+        }
+
+        .fullscreen-button:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Action Buttons */
+        .actions-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 0 3rem 1rem;
+        }
+
+        .action-button {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition-std);
+            box-shadow: var(--box-shadow-sm);
+        }
+
+        .action-button:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--box-shadow-md);
+        }
+
+        .action-button.demo {
+            background-color: var(--secondary);
+        }
+
+        .action-button.workflow {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+            
+            .slide {
+                padding: 2rem;
+            }
+            
+            .slide-title {
+                font-size: 1.8rem;
+            }
+            
+            .process-flow {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .process-arrow {
+                transform: rotate(90deg);
+                margin: 0.5rem 0;
+            }
+            
+            .actions-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s forwards;
+            opacity: 0;
+        }
+
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <!-- Header & Brand -->
+    <header class="header">
+        <div class="container">
+            <div class="brand">
+                <div class="logo">
+                    <i class="fas fa-compass"></i>
+                </div>
+                <div class="brand-details">
+                    <h1 class="brand-name">COMPASS</h1>
+                    <p class="brand-tagline">Comprehensive Observational Multi-Platform Analytical Support System</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Background Elements -->
+        <div class="bg-gradient"></div>
+        <div class="bg-pattern"></div>
+
+        <!-- Presentation Container -->
+        <div class="presentation-container" id="presentation">
+            <!-- Fullscreen Toggle Button -->
+            <button class="fullscreen-button" id="fullscreenBtn" title="Toggle Fullscreen">
+                <i class="fas fa-expand" id="fullscreenIcon"></i>
+            </button>
+            
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-bar" id="progress"></div>
+            </div>
+
+            <!-- Slides Wrapper -->
+            <div class="slides-wrapper">
+                <!-- Slide 1: The Problem -->
+                <div class="slide active" id="slide-1">
+                    <div class="slide-header">
+                        <h2 class="slide-title">The Challenge</h2>
+                        <p class="slide-subtitle">Critical Information Gaps During Crisis Response</p>
+                    </div>
+                    <div class="slide-content">
+                        <div class="two-columns" style="align-items: flex-start;">
+                            <div>
+                                <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.4rem;">Data Fragmentation</h3>
+                                <ul class="custom-list">
+                                    <li class="fade-in">Mission-critical data exists in siloed systems across multiple departments, agencies, and platforms</li>
+                                    <li class="fade-in delay-100">Real-time information (sensors, field reports) rarely connects with historical context or predictive models</li>
+                                    <li class="fade-in delay-200">Decision-makers waste precious time manually collecting and reconciling data from disparate sources</li>
+                                </ul>
+                                
+                                <h3 style="color: var(--primary); margin: 1.5rem 0 1rem; font-size: 1.4rem;">Technical Barriers</h3>
+                                <ul class="custom-list">
+                                    <li class="fade-in delay-300">Specialized expertise required to extract insights from complex datasets</li>
+                                    <li class="fade-in delay-400">Existing tools prioritize technical depth over accessibility, limiting organization-wide adoption</li>
+                                    <li class="fade-in delay-500">Inconsistent data formats and standards prevent automated integration and analysis</li>
+                                </ul>
+                            </div>
+                            
+                            <div>
+                                <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.4rem;">Operational Impact</h3>
+                                <ul class="custom-list">
+                                    <li class="fade-in delay-100">Average response time increases due to information retrieval delays</li>
+                                    <li class="fade-in delay-200">Local authorities often operate with 8-12 hour information lag during critical events</li>
+                                    <li class="fade-in delay-300">Decision quality suffers when teams lack comprehensive situational awareness</li>
+                                </ul>
+                                
+                                <div style="background-color: rgba(255, 107, 53, 0.1); border-left: 4px solid var(--secondary); padding: 1.2rem; margin-top: 1.5rem; border-radius: var(--border-radius-sm);">
+                                    <h4 style="color: var(--secondary); margin-bottom: 0.5rem; font-size: 1.1rem;">The Cost of Fragmentation</h4>
+                                    <p class="fade-in delay-500" style="font-size: 1rem; line-height: 1.6;">
+                                        When critical events unfold, information delays can mean the difference between proactive management and reactive crisis response. Current practices force organizations to choose between <strong>speed</strong> and <strong>accuracy</strong>, when they urgently need both.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2: The Solution -->
+                <div class="slide" id="slide-2">
+                    <div class="slide-header">
+                        <h2 class="slide-title">Our Solution</h2>
+                    </div>
+                    <div class="slide-content">
+                        <div style="display: flex; justify-content: center; margin-bottom: 2rem;">
+                            <div style="text-align: center; max-width: 80%;">
+                                <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.3rem;">From Fragmented Data to Actionable Intelligence</h3>
+                                <p style="font-size: 1.1rem; line-height: 1.6;">
+                                    The system transforms how organizations operate by creating a single source of truth that unifies historical context, real-time data, and predictive analytics in an intuitive, AI-powered platform - whether for day-to-day operations, strategic planning, or critical event response.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="process-flow" style="margin: 2.5rem 0;">
+                            <div class="process-step">
+                                <div class="icon">1</div>
+                                <span><strong>Unified Data Ingestion</strong></span>
+                            </div>
+                            <div class="process-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                            <div class="process-step">
+                                <div class="icon">2</div>
+                                <span><strong>AI-Powered Analysis</strong></span>
+                            </div>
+                            <div class="process-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                            <div class="process-step">
+                                <div class="icon">3</div>
+                                <span><strong>Natural Language Queries</strong></span>
+                            </div>
+                            <div class="process-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                            <div class="process-step">
+                                <div class="icon">4</div>
+                                <span><strong>Actionable Insights</strong></span>
+                            </div>
+                        </div>
+                        
+                        <div class="two-columns" style="margin-top: 2rem;">
+                            <div style="background-color: rgba(30, 77, 140, 0.05); padding: 1.5rem; border-radius: var(--border-radius-md);">
+                                <h4 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.1rem; display: flex; align-items: center;">
+                                    <i class="fas fa-check-circle" style="color: var(--success); margin-right: 0.5rem;"></i> Key Differentiators
+                                </h4>
+                                <ul style="list-style: none; padding-left: 0.5rem;">
+                                    <li style="margin-bottom: 0.7rem; display: flex; align-items: baseline;">
+                                        <span style="color: var(--primary); font-weight: bold; margin-right: 0.5rem;">•</span>
+                                        <span>Democratizes data access across organizational levels</span>
+                                    </li>
+                                    <li style="margin-bottom: 0.7rem; display: flex; align-items: baseline;">
+                                        <span style="color: var(--primary); font-weight: bold; margin-right: 0.5rem;">•</span>
+                                        <span>Reduces information retrieval time from hours to seconds</span>
+                                    </li>
+                                    <li style="margin-bottom: 0.7rem; display: flex; align-items: baseline;">
+                                        <span style="color: var(--primary); font-weight: bold; margin-right: 0.5rem;">•</span>
+                                        <span>Enables proactive decision-making with predictive capabilities</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div style="background-color: rgba(30, 77, 140, 0.05); padding: 1.5rem; border-radius: var(--border-radius-md);">
+                                <h4 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.1rem; display: flex; align-items: center;">
+                                    <i class="fas fa-lightbulb" style="color: var(--warning); margin-right: 0.5rem;"></i> Implementation Approach
+                                </h4>
+                                <ul style="list-style: none; padding-left: 0.5rem;">
+                                    <li style="margin-bottom: 0.7rem; display: flex; align-items: baseline;">
+                                        <span style="color: var(--primary); font-weight: bold; margin-right: 0.5rem;">•</span>
+                                        <span>Rapid deployment</span>
+                                    </li>
+                                    <li style="margin-bottom: 0.7rem; display: flex; align-items: baseline;">
+                                        <span style="color: var(--primary); font-weight: bold; margin-right: 0.5rem;">•</span>
+                                        <span>Seamlessly integrates with existing systems and data sources</span>
+                                    </li>
+                                    <li style="margin-bottom: 0.7rem; display: flex; align-items: baseline;">
+                                        <span style="color: var(--primary); font-weight: bold; margin-right: 0.5rem;">•</span>
+                                        <span>Minimal training required with intuitive interface</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3: How It Works -->
+                <div class="slide" id="slide-3">
+                    <div class="slide-header">
+                        <h2 class="slide-title">How the system Works</h2>
+                        <p class="slide-subtitle">Technical Architecture & Capabilities</p>
+                    </div>
+                    <div class="slide-content">
+                        <div class="grid-list">
+                            <div class="card">
+                                <h3 class="card-title">
+                                    <div class="card-icon"><i class="fas fa-database"></i></div>
+                                    Advanced Data Ingestion
+                                </h3>
+                                <p><strong>Core Capability:</strong> Seamless integration of structured and unstructured data</p>
+                                <ul style="list-style: none; padding-left: 0; margin-top: 0.7rem; font-size: 0.95rem;">
+                                    <li style="margin-bottom: 0.5rem;">• Multi-format document processing (PDF, Word, Excel)</li>
+                                    <li style="margin-bottom: 0.5rem;">• Real-time API connections to external data services</li>
+                                    <li>• Automated sensor data normalization and validation</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="card">
+                                <h3 class="card-title">
+                                    <div class="card-icon"><i class="fas fa-brain"></i></div>
+                                    AI-Powered Intelligence
+                                </h3>
+                                <p><strong>Core Capability:</strong> Contextual understanding across diverse datasets</p>
+                                <ul style="list-style: none; padding-left: 0; margin-top: 0.7rem; font-size: 0.95rem;">
+                                    <li style="margin-bottom: 0.5rem;">• Advanced NLP for entity recognition and relationship mapping</li>
+                                    <li style="margin-bottom: 0.5rem;">• Machine learning models for anomaly detection</li>
+                                    <li>• Knowledge graph technology for connecting disparate information</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="card">
+                                <h3 class="card-title">
+                                    <div class="card-icon"><i class="fas fa-cogs"></i></div>
+                                    Unified Knowledge Repository
+                                </h3>
+                                <p><strong>Core Capability:</strong> Secure, scalable data management architecture</p>
+                                <ul style="list-style: none; padding-left: 0; margin-top: 0.7rem; font-size: 0.95rem;">
+                                    <li style="margin-bottom: 0.5rem;">• Cloud-native, distributed storage framework</li>
+                                    <li style="margin-bottom: 0.5rem;">• Role-based access controls with granular permissions</li>
+                                    <li>• Automatic versioning and data lineage tracking</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="card">
+                                <h3 class="card-title">
+                                    <div class="card-icon"><i class="fas fa-search"></i></div>
+                                    Natural Interface Layer
+                                </h3>
+                                <p><strong>Core Capability:</strong> Intuitive, accessible query mechanisms</p>
+                                <ul style="list-style: none; padding-left: 0; margin-top: 0.7rem; font-size: 0.95rem;">
+                                    <li style="margin-bottom: 0.5rem;">• Conversational queries in natural language (Text & Voice)</li>
+                                    <li style="margin-bottom: 0.5rem;">• Context-aware responses with relevance optimization</li>
+                                    <li>• Progressive learning from user interactions</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="card">
+                                <h3 class="card-title">
+                                    <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                                    Advanced Visualization Engine
+                                </h3>
+                                <p><strong>Core Capability:</strong> Dynamic, interactive data representations</p>
+                                <ul style="list-style: none; padding-left: 0; margin-top: 0.7rem; font-size: 0.95rem;">
+                                    <li style="margin-bottom: 0.5rem;">• Real-time geospatial mapping with temporal playback</li>
+                                    <li style="margin-bottom: 0.5rem;">• Automated chart selection based on data characteristics</li>
+                                    <li>• Interactive dashboards with drill-down capabilities</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 4: Benefits & Use Cases -->
+                <div class="slide" id="slide-4">
+                    <div class="slide-header">
+                        <h2 class="slide-title">Value Proposition</h2>
+                        <p class="slide-subtitle">Transforming Decision-Making & Crisis Management</p>
+                    </div>
+                    <div class="slide-content">
+                        <div class="two-columns">
+                            <div>
+                                <h3 class="card-title">
+                                    <div class="card-icon"><i class="fas fa-award"></i></div>
+                                    Measurable Organizational Impact
+                                </h3>
+                                <ul class="custom-list check-list">
+                                    <li>
+                                        <strong>Faster Decision Cycles:</strong> Reduce information retrieval and analysis time from hours to minutes, enabling rapid response to evolving situations.
+                                    </li>
+                                    <li>
+                                        <strong>360° Situational Awareness:</strong> Eliminate blind spots with comprehensive, integrated views across temporal, spatial, and organizational dimensions.
+                                    </li>
+                                    <li>
+                                        <strong>Improved Resource Allocation:</strong> Optimize deployment of personnel and assets with data-driven prioritization and forecasting.
+                                    </li>
+                                    <li>
+                                        <strong>Training Efficiency:</strong> Reduce onboarding time with intuitive interfaces that guide users to insights without technical expertise or introducing new technology to a larger group of people with wide scalability.
+                                    </li>
+                                    <li>
+                                        <strong>Enhanced Multi-Agency Coordination:</strong> Create a common operational picture across organizational boundaries with standardized data exchange.
+                                    </li>
+                                    <li>
+                                        <strong>Local-to-Global Intelligence:</strong> Empower field teams with the same high-quality information available to central command.
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div>
+                                <h3 class="card-title">
+                                    <div class="card-icon"><i class="fas fa-lightbulb"></i></div>
+                                    Validated Use Cases
+                                </h3>
+                                
+                                <div class="use-cases" style="grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));">
+                                    <div class="use-case-item">
+                                        <i class="fas fa-water" style="display: block; margin-bottom: 0.5rem; color: var(--primary);"></i>
+                                        Flood Response & Management
+                                    </div>
+                                    <div class="use-case-item">
+                                        <i class="fas fa-fire" style="display: block; margin-bottom: 0.5rem; color: var(--primary);"></i>
+                                        Wildfire Monitoring
+                                    </div>
+                                    <div class="use-case-item">
+                                        <i class="fas fa-temperature-high" style="display: block; margin-bottom: 0.5rem; color: var(--primary);"></i>
+                                        Heat Studies
+                                    </div>
+                                    <div class="use-case-item">
+                                        <i class="fas fa-virus" style="display: block; margin-bottom: 0.5rem; color: var(--primary);"></i>
+                                        Public Health Crisis
+                                    </div>
+                                    <div class="use-case-item">
+                                        <i class="fas fa-road" style="display: block; margin-bottom: 0.5rem; color: var(--primary);"></i>
+                                        Infrastructure Assessment
+                                    </div>
+                                    <div class="use-case-item">
+                                        <i class="fas fa-seedling" style="display: block; margin-bottom: 0.5rem; color: var(--primary);"></i>
+                                        Agricultural Planning
+                                    </div>
+                                    <div class="use-case-item">
+                                        <i class="fas fa-truck" style="display: block; margin-bottom: 0.5rem; color: var(--primary);"></i>
+                                        Supply Chain Resilience
+                                    </div>
+                                    <div class="use-case-item">
+                                        <i class="fas fa-home" style="display: block; margin-bottom: 0.5rem; color: var(--primary);"></i>
+                                        Damage Assessment
+                                    </div>
+                                    <div class="use-case-item">
+                                        <i class="fas fa-leaf" style="display: block; margin-bottom: 0.5rem; color: var(--primary);"></i>
+                                        Environmental Monitoring
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 5: Call to Action -->
+                <div class="slide" id="slide-5">
+                    <div class="slide-content cta-container" style="max-width: 45%; padding: 0;">
+                        <h2 class="cta-heading">Experience the Advantage</h2>
+                        
+                        <div style="display: flex; justify-content: center; margin: 1rem 0;">
+                            <div style="width: 98%; max-width: 1400px; background-color: white; border-radius: var(--border-radius-lg); box-shadow: var(--box-shadow-lg); overflow: hidden;">
+                                <img src="image.png" alt="COMPASS Dashboard Preview" style="width: 100%; display: block; max-height: 70vh; object-fit: contain;">
+                                <div style="padding: 1.5rem;">
+                                    <p style="text-align: left; font-size: 1.1rem; line-height: 1.6; margin-bottom: 0.5rem;">
+                                        The system transforms how organizations respond to critical events by unifying fragmented data sources into a single, powerful decision-support platform. <strong>Ready to transform your organization's decision-making capabilities?</strong>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Control Panel (Navigation + Action Buttons) -->
+            <div class="control-panel">
+                <!-- Navigation -->
+                <div class="navigation">
+                    <div class="slide-indicators" id="slideIndicators">
+                        <div class="slide-indicator active" data-slide="0"></div>
+                        <div class="slide-indicator" data-slide="1"></div>
+                        <div class="slide-indicator" data-slide="2"></div>
+                        <div class="slide-indicator" data-slide="3"></div>
+                        <div class="slide-indicator" data-slide="4"></div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <button class="nav-button" id="prevBtn" disabled>
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </button>
+                        <button class="nav-button" id="nextBtn">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons - Now inside the presentation container -->
+                <div class="actions-container">
+                    <a href="https://sirpi-57.github.io/Assam-Flood-AI-Assistant/" class="action-button demo" target="_blank">
+                        <i class="fas fa-play-circle"></i> Try Demo
+                    </a>
+                    <a href="https://sirpi-57.github.io/workflow-charts/" class="action-button workflow" target="_blank">
+                        <i class="fas fa-project-diagram"></i> View Detailed Workflow
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // DOM Elements
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const indicators = document.querySelectorAll('.slide-indicator');
+        const progressBar = document.getElementById('progress');
+        const presentationContainer = document.getElementById('presentation');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const fullscreenIcon = document.getElementById('fullscreenIcon');
+        
+        let currentSlideIndex = 0;
+        const totalSlides = slides.length;
+        let isFullscreen = false;
+        
+        // Toggle fullscreen mode
+        function toggleFullscreen() {
+            isFullscreen = !isFullscreen;
+            
+            if (isFullscreen) {
+                presentationContainer.classList.add('fullscreen');
+                fullscreenIcon.classList.remove('fa-expand');
+                fullscreenIcon.classList.add('fa-compress');
+            } else {
+                presentationContainer.classList.remove('fullscreen');
+                fullscreenIcon.classList.remove('fa-compress');
+                fullscreenIcon.classList.add('fa-expand');
+            }
+        }
+        
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        
+        // Exit fullscreen on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isFullscreen) {
+                toggleFullscreen();
+            }
+        });
+        
+        // Function to handle animations for the current slide
+        function setupAnimations(slideIndex) {
+            const currentSlide = slides[slideIndex];
+            const animatedElements = currentSlide.querySelectorAll('.fade-in');
+            
+            // Reset animations
+            animatedElements.forEach(element => {
+                element.style.opacity = '0';
+            });
+            
+            // Trigger animations with staggered delay
+            setTimeout(() => {
+                animatedElements.forEach((element, index) => {
+                    setTimeout(() => {
+                        element.style.opacity = '1';
+                    }, index * 200); // 200ms delay between each element
+                });
+            }, 300); // Wait for slide transition to complete
+        }
+        
+        // Show slide based on index
+        function showSlide(index) {
+            // Hide all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Update indicators
+            indicators.forEach((indicator, i) => {
+                indicator.classList.toggle('active', i === index);
+                indicator.setAttribute('aria-selected', i === index ? 'true' : 'false');
+            });
+            
+            // Show current slide
+            slides[index].classList.add('active');
+            
+            // Update button states
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === totalSlides - 1;
+            
+            // Update progress
+            const percentage = ((index + 1) / totalSlides) * 100;
+            progressBar.style.width = `${percentage}%`;
+            
+            // Update current index
+            currentSlideIndex = index;
+            
+            // Setup animations for this slide
+            setupAnimations(index);
+        }
+        
+        // Event Listeners for Navigation
+        nextBtn.addEventListener('click', () => {
+            if (currentSlideIndex < totalSlides - 1) {
+                showSlide(currentSlideIndex + 1);
+            }
+        });
+        
+        prevBtn.addEventListener('click', () => {
+            if (currentSlideIndex > 0) {
+                showSlide(currentSlideIndex - 1);
+            }
+        });
+        
+        // Click on indicators
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                showSlide(index);
+            });
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && currentSlideIndex < totalSlides - 1) {
+                showSlide(currentSlideIndex + 1);
+            } else if (e.key === 'ArrowLeft' && currentSlideIndex > 0) {
+                showSlide(currentSlideIndex - 1);
+            }
+        });
+        
+        // Touch swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        const slidesWrapper = document.querySelector('.slides-wrapper');
+        
+        slidesWrapper.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        slidesWrapper.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            // Minimum swipe distance (in px)
+            const swipeThreshold = 50;
+            
+            if (touchEndX < touchStartX - swipeThreshold && currentSlideIndex < totalSlides - 1) {
+                // Swipe left
+                showSlide(currentSlideIndex + 1);
+            } else if (touchEndX > touchStartX + swipeThreshold && currentSlideIndex > 0) {
+                // Swipe right
+                showSlide(currentSlideIndex - 1);
+            }
+        }
+
+        // Optional: Auto-advance for presentation mode
+        let presentationMode = false;
+        let presentationTimer;
+        
+        function togglePresentationMode() {
+            presentationMode = !presentationMode;
+            
+            if (presentationMode) {
+                // Start auto-advancing slides
+                presentationTimer = setInterval(() => {
+                    if (currentSlideIndex < totalSlides - 1) {
+                        showSlide(currentSlideIndex + 1);
+                    } else {
+                        // Stop when reaching the last slide
+                        clearInterval(presentationTimer);
+                        presentationMode = false;
+                    }
+                }, 8000); // 8 seconds per slide
+            } else {
+                // Stop auto-advancing
+                clearInterval(presentationTimer);
+            }
+        }
+        
+        // Presentation mode toggle (can be triggered via keyboard shortcut)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'p' || e.key === 'P') {
+                togglePresentationMode();
+            }
+        });
+        
+        // Accessibility enhancements
+        slides.forEach((slide, index) => {
+            slide.setAttribute('role', 'tabpanel');
+            slide.setAttribute('aria-labelledby', `slide-title-${index}`);
+            
+            // Set the heading ID for ARIA reference
+            const heading = slide.querySelector('.slide-title, .cta-heading');
+            if (heading) {
+                heading.id = `slide-title-${index}`;
+            }
+        });
+        
+        indicators.forEach((indicator, index) => {
+            indicator.setAttribute('role', 'tab');
+            indicator.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
+            indicator.setAttribute('aria-controls', `slide-${index + 1}`);
+            indicator.setAttribute('tabindex', '0');
+            
+            // Allow keyboard activation of indicators
+            indicator.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    showSlide(index);
+                }
+            });
+        });
+        
+        // Initialize the first slide
+        setupAnimations(0);
+    </script>
+</body>
+</html>
